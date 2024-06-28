@@ -18,3 +18,7 @@
 body {
   color: rgb(var(--foreground-rgb));
 } */
+body {
+  font-family: var(--font-inter);
+}
+

@@ -30,7 +30,7 @@ const NavBar = () => {
                             <Link href={link.href} className={classnames({
                                 'text-gray-900':currentPath===link.href,
                                 'text-gray-500':currentPath!==link.href,
-                                'transition-colors duration-200 font-bold text-xl':true
+                                'transition-colors duration-200 font-bold text-lg':true
                             })}>
                                 {link.label}
                             </Link>
