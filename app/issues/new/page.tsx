@@ -1,7 +1,6 @@
 'use client';
 import { Button, Callout, TextField, Text,Spinner } from '@radix-ui/themes'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
-import SimpleMDE from "react-simplemde-editor";
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import "easymde/dist/easymde.min.css";
@@ -10,8 +9,12 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IssueSchema } from '@/app/ValidationSchema';
 import { z } from 'zod'
+import dynamic from 'next/dynamic';
 
 type IssueForm = z.infer<typeof IssueSchema>;
+
+const SimpleMDE = dynamic(()=> import('react-simplemde-editor'),{ssr:false}) //lazy loading the component bexocz simpleMDE is
+// a client side component and in nextjs everything is rendered in server in the initial render so we use lazy loading 
 
 
 const NewIssuePage = () => {

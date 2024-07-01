@@ -24,7 +24,7 @@ const DetailIssuePage = async ({ params }: Props) => {
             <Flex gap='4' className='my-4'><p>{Issue.status}</p>
                 <p>{Issue.createdAt.toDateString()}</p></Flex>
 
-            <Card className='prose'>
+            <Card className='prose' mt='4'>
                 <ReactMarkdown
             >{Issue.description}
             </ReactMarkdown>
