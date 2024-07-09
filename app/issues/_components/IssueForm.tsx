@@ -13,7 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
-import { forwardRef, useState } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IssueSchema } from "@/app/ValidationSchema";
 import { z } from "zod";
@@ -21,7 +21,6 @@ import dynamic from "next/dynamic";
 import { Issue, Status } from "@prisma/client";
 
 type IssueFormData = z.infer<typeof IssueSchema>;
-
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -39,13 +38,31 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   } = useForm<IssueFormData>({
     resolver: zodResolver(IssueSchema),
     defaultValues: {
-      title: issue?.title,
-      description: issue?.description ,
-      status: issue?.status 
+      title: issue?.title || "",
+      description: issue?.description || "",
+      status: issue?.status || "OPEN",
     },
   });
   const [error, setError] = useState("");
   const [issubmitting, setSubmitting] = useState(false);
+
+  const onSubmit = async (data: IssueFormData) => {
+    console.log("Submitting form with data:", data);
+    setSubmitting(true);
+    try {
+      if (issue) {
+        await axios.patch("/api/issue/" + issue.id, data);
+      } else {
+        await axios.post("/api/issue", data);
+      }
+      router.push("/issues");
+      router.refresh();
+      setSubmitting(false);
+    } catch (error) {
+      setError("An unexpected error has occurred");
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="max-w-xl">
@@ -57,26 +74,8 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form
-        className="space-y-3"
-        onSubmit={handleSubmit(async (data) => {
-          setSubmitting(true);
-          try {
-            if (issue) await axios.patch("/api/issue/" + issue.id, data);
-            else await axios.post("/api/issue", data);
-            router.push("/issues");
-            router.refresh()
-            setSubmitting(false);
-          } catch (error) {
-            setError("An unexpected error has occurred");
-            setSubmitting(false);
-          }
-        })}
-      >
-        <TextField.Root
-          placeholder="Title"
-          {...register("title")}
-        />
+      <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+        <TextField.Root placeholder="Title" {...register("title")} />
         {errors.title && (
           <Text color="red" as="p">
             {errors.title.message}
@@ -94,8 +93,8 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
             {errors.description.message}
           </Text>
         )}
-        <div className="flex justify-between">
-          <Button disabled={issubmitting}>
+        <Flex justify="between">
+          <Button type="submit" disabled={issubmitting}>
             {issue ? "Update Issue" : "Submit New Issue"}
             {issubmitting && <Spinner />}
           </Button>
@@ -110,28 +109,28 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
               <DropdownMenu.Content variant="soft" color="crimson">
                 <DropdownMenu.Item
                   color="red"
-                  onSelect={() => setValue("status", "OPEN")}
+                  onSelect={() => setValue("status", Status.OPEN)}
                 >
                   OPEN
                 </DropdownMenu.Item>
                 <DropdownMenu.Separator />
                 <DropdownMenu.Item
                   color="green"
-                  onSelect={() => setValue("status", "CLOSED")}
+                  onSelect={() => setValue("status", Status.CLOSED)}
                 >
                   CLOSED
                 </DropdownMenu.Item>
                 <DropdownMenu.Separator />
                 <DropdownMenu.Item
                   color="purple"
-                  onSelect={() => setValue("status", "IN_PROGRESS")}
+                  onSelect={() => setValue("status", Status.IN_PROGRESS)}
                 >
                   IN_PROGRESS
                 </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu.Root>
           )}
-        </div>
+        </Flex>
       </form>
     </div>
   );
