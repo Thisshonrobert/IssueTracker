@@ -1,32 +1,27 @@
 "use client";
+import { IssueSchema } from "@/app/ValidationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Issue, Status } from "@prisma/client";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
   Button,
   Callout,
-  TextField,
-  Text,
-  Spinner,
   DropdownMenu,
   Flex,
+  Spinner,
+  Text,
+  TextField,
 } from "@radix-ui/themes";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { IssueSchema } from "@/app/ValidationSchema";
+import { Controller, useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
-import dynamic from "next/dynamic";
-import { Issue, Status } from "@prisma/client";
-
 type IssueFormData = z.infer<typeof IssueSchema>;
 
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-}); //lazy loading the component bexocz simpleMDE is
-// a client side component and in nextjs everything is rendered in server in the initial render so we use lazy loading
-
+ 
 const IssueForm = ({ issue }: { issue?: Issue }) => {
   const router = useRouter();
   const {
@@ -55,7 +50,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
       } else {
         await axios.post("/api/issue", data);
       }
-      router.push("/issues");
+      router.push("/issues/list");
       router.refresh();
       setSubmitting(false);
     } catch (error) {
@@ -137,3 +132,6 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
 };
 
 export default IssueForm;
+//lazy loading the component bexocz simpleMDE is
+// a client side component and in nextjs everything is rendered in server in the initial render so we use lazy loading
+//By using zodResolver with react-hook-form, you create a robust, type-safe, and maintainable form validation system that enhances the overall quality of your code.

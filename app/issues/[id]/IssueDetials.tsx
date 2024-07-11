@@ -11,7 +11,7 @@ const IssueDetails = ({ issue }: { issue: Issue }) => {
         <StatusBadge status={issue.status} />
         <Text>{issue.createdAt.toDateString()}</Text>
       </Flex>
-      <Card className="prose" mt="4">
+      <Card className="prose max-w-full" mt="4">
         <ReactMarkdown>{issue.description}</ReactMarkdown>
       </Card>
     </>
@@ -19,3 +19,5 @@ const IssueDetails = ({ issue }: { issue: Issue }) => {
 };
 
 export default IssueDetails;
+
+//ReactMarkdown is used because the styles like bold italic extra we make in SimpleMDE comes along with a ***.. and we dont need it 
