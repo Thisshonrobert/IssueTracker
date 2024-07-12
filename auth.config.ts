@@ -1,4 +1,5 @@
 import Google from "next-auth/providers/google"
+import GitHub from "next-auth/providers/github"
 import type { NextAuthConfig } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
@@ -6,7 +7,7 @@ import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
 export default {
-  providers: [Google],
+  providers: [Google,GitHub],
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   callbacks: {
@@ -15,3 +16,9 @@ export default {
     },
   },
 } satisfies NextAuthConfig
+
+// if the github authentication doesnt work 
+//  providers: [
+//     Google(),
+//     GitHub({ allowDangerousEmailAccountLinking: true }),
+//   ],
