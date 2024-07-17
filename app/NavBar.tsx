@@ -22,6 +22,9 @@ const NavBar = () => {
     }
   ];
 
+  // Log session data to check the profile picture URL
+  console.log('Session Data:', session);
+
   return (
     <nav className="border-b mb-5 px-5 py-3">
       <Container>
@@ -61,7 +64,7 @@ const NavBar = () => {
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
                   <Avatar
-                    src={session?.user!.image!}
+                    src={session?.user?.image || ''}
                     fallback={
                       <Box width="24px" height="24px">
                         <svg viewBox="0 0 64 64" fill="currentColor">
@@ -74,14 +77,12 @@ const NavBar = () => {
                     className="cursor-pointer"
                   />
                 </DropdownMenu.Trigger>
-                <DropdownMenu.Content variant="solid">
-                  <Text>
-                    <DropdownMenu.Label>{session?.user?.email}</DropdownMenu.Label>
-                  </Text>
+                <DropdownMenu.Content>
+                  <DropdownMenu.Label>{session?.user?.email}</DropdownMenu.Label>
                   <DropdownMenu.Separator />
-                  <Button color="crimson" onClick={() => signOut()}>
+                  <DropdownMenu.Item onSelect={() => signOut()}>
                     Sign out
-                  </Button>
+                  </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
             ) : (
