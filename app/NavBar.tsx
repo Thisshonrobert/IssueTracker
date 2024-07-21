@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import classnames from 'classnames';
 import { signIn, useSession, signOut } from 'next-auth/react';
 import { Avatar, Box, Button, Container, DropdownMenu, Flex, Text } from '@radix-ui/themes';
+import  ThemeSwitcher  from './theme/ThemeSwitcher';
 
 const NavBar = () => {
   const currentPath = usePathname(); // gives the path name
@@ -38,8 +39,8 @@ const NavBar = () => {
                 <li key={link.href}>
                   <Link
                     className={classnames({
-                      'text-zinc-900': link.href === currentPath,
-                      'text-zinc-500': link.href !== currentPath,
+                      'text-zinc-300': link.href === currentPath,
+                      'text-zinc-400': link.href !== currentPath,
                       'hover:text-zinc-800 transition-colors': true
                     })}
                     href={link.href}
@@ -50,7 +51,9 @@ const NavBar = () => {
               ))}
             </ul>
           </Flex>
-          <Box>
+
+          <Flex gap='5'>
+          <ThemeSwitcher/>
             {status === 'loading' ? (
               // Show a loading indicator while session data is being fetched
               <Button disabled >
@@ -90,7 +93,9 @@ const NavBar = () => {
                 Sign in
               </Button>
             )}
-          </Box>
+            
+          </Flex>
+          
         </Flex>
       </Container>
     </nav>

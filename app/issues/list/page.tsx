@@ -1,95 +1,73 @@
-import prisma from '@/prisma/client'
-import {  Table } from '@radix-ui/themes'
-import React from 'react'
-import StatusBadge from '../../components/StatusBadge'
-import IssueAction from './IssueAction'
-import Link from '../../components/Link'
-import { Issue, Status } from '@prisma/client'
-import NextLink from 'next/link';
-import { ArrowUpIcon } from '@radix-ui/react-icons'
+import prisma from "@/prisma/client";
+import { Flex, Table } from "@radix-ui/themes";
+import React from "react";
+import StatusBadge from "../../components/StatusBadge";
+import IssueAction from "./IssueAction";
+import Link from "../../components/Link";
+import { Issue, Status } from "@prisma/client";
+import NextLink from "next/link";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
+import Pagination from "@/app/components/Pagination";
+import IssueTable, { IssueQuery, columnNames } from "./IssueTable";
+import { Metadata } from "next/types";
 
-interface Props { 
-  searchParams: { status: string,orderBy:keyof Issue }
+interface Props {
+  searchParams: IssueQuery;
 }
 // props coming to the page is the params
-const Issuepage = async ({
-     searchParams,
-   }: Props) => {
+const Issuepage = async ({ searchParams }: Props) => {
+  const statuses = ["ALL", "OPEN", "CLOSED", "IN_PROGRESS"];
+  const status = statuses.includes(searchParams.status)
+    ? searchParams.status
+    : undefined; // to check whether the params is in the array if wrong params is sent like XALL it will be undefined so filter will be undone and every issue will be shown
 
-    const columns: {
-      label: string;
-      value: keyof Issue;
-      className?: string;
-    }[] = [
-      { label: "Issue", value: "title" },
-      {
-        label: "Status",
-        value: "status",
-        className: "hidden md:table-cell",
+  const orderBy = columnNames.includes(searchParams.orderBy)
+    ? { [searchParams.orderBy]: "asc" }
+    : undefined;
+
+  const page = parseInt(searchParams.page) || 1;
+  const pageSize = 10; //pageSize determines the number of records to display on each page.
+  let issues, issueCount;
+  if (status != "ALL") {
+    issues = await prisma.issue.findMany({
+      where: {
+        status: status as Status,
       },
-      {
-        label: "Created",
-        value: "createdAt",
-        className: "hidden md:table-cell",
+      orderBy,
+      skip: (page - 1) * pageSize, //skip is used to determine the number of records to skip before starting to collect the result set, (2-1) * 10 = 10. This means the query will skip the first 10 records and return the next 10 records (from the 11th to the 20th).
+      take: pageSize, //take is used to determine the number of records to fetch from the database.
+    });
+    issueCount = await prisma.issue.count({
+      where: {
+        status: status as Status,
       },
-    ];
-
-
-
-
-    const statuses = ['ALL','OPEN','CLOSED','IN_PROGRESS'];
-      const status = statuses.includes(searchParams.status) 
-        ? searchParams.status
-        : undefined; // to check whether the params is in the array if wrong params is sent like XALL it will be undefined so filter will be undone and every issue will be shown
-       
-        const orderBy = columns.map(column=>column.value).includes(searchParams.orderBy) ? {[searchParams.orderBy]:'asc'}:undefined
-       
-       
-        let issues;
-      if(status!='ALL'){
-         issues = await prisma.issue.findMany({
-              where: {
-                status:status as Status
-              },
-              orderBy 
-            });
-      }else{
-        issues = await prisma.issue.findMany({
-          orderBy
-        });
-      }
-      
+    });
+  } else {
+    issues = await prisma.issue.findMany({
+      orderBy,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+    issueCount = await prisma.issue.count({});
+  }
 
   return (
-    <div>
-      <IssueAction/>
-      <Table.Root variant='surface'>
-        <Table.Header>
-          <Table.Row>
-          {columns.map((column) => (
-              <Table.ColumnHeaderCell key={column.value} className={column.className}>
-                <NextLink href={{
-                  query: { ...searchParams, orderBy: column.value }                  
-                }}>{column.label}</NextLink>
-                {column.value === searchParams.orderBy && <ArrowUpIcon className="inline"/>}
-              </Table.ColumnHeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {issues.map(issue => (
-            <Table.Row key={issue.id}>
-            <Table.Cell><Link href={`/issues/${issue.id}`}>{issue.title}</Link>
-            <div className='block md:hidden'><StatusBadge status={issue.status}/></div>
-            </Table.Cell>
-            <Table.Cell  className='hidden md:table-cell'><StatusBadge status={issue.status}/></Table.Cell>
-            <Table.Cell  className='hidden md:table-cell'>{issue.createdAt.toDateString()}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
-    </div>
-  )
-}
-export const dynamic = 'force-dynamic'
-export default Issuepage
+    <Flex direction="column" gap="3">
+      <IssueAction />
+      <IssueTable searchParams={searchParams} issues={issues} />
+
+      <Pagination
+        pageSize={pageSize}
+        itemsCount={issueCount}
+        currentPage={page}
+      />
+    </Flex>
+  );
+};
+export const dynamic = "force-dynamic";
+export default Issuepage;
+
+export const metadata: Metadata = {
+  title: 'IssueTracker Issues',
+  description: 'View all Issues',
+};

@@ -1,24 +1,26 @@
+import { auth } from '@/auth'
 import prisma from '@/prisma/client'
 import { Box, Flex, Grid } from '@radix-ui/themes'
 import { notFound } from 'next/navigation'
+import Assignee from './Assignee'
+import DeleteIssueButton from './DeleteIssueButton'
 import EditIssueButton from './EditIssueButton'
 import IssueDetails from './IssueDetials'
-import DeleteIssueButton from './DeleteIssueButton'
-import { auth } from '@/auth'
-import Assignee from './Assignee'
+import { cache } from 'react'
 
 interface Props {
     params: { id: string }
 }
 
+const fetchIssue = cache((Id:number)=>prisma.issue.findUnique({
+    where:{
+        id: Id
+    }
+})) 
+
 const DetailIssuePage = async ({ params }: Props) => {
     const session = await auth();
-    const Issue = await prisma.issue.findUnique({
-        where: {
-            id: parseInt(params.id)
-        }
-    }
-    )
+    const Issue = await fetchIssue(parseInt(params.id))
     if (!Issue)
         notFound()
 
@@ -37,4 +39,11 @@ const DetailIssuePage = async ({ params }: Props) => {
 }
 
 export default DetailIssuePage
+
+export async function generateMetadata({params}:Props) {
+   const issue = await fetchIssue(parseInt(params.id))
+   return { title: 'Issue no.'+issue?.id,
+   description: 'View the entire Issue no.'+issue?.id,
+ };
+ }
 
