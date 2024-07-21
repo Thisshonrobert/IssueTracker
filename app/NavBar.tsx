@@ -1,13 +1,12 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { FaBug } from 'react-icons/fa';
-import { usePathname } from 'next/navigation';
+import { Avatar, Box, Button, Container, DropdownMenu, Flex } from '@radix-ui/themes';
 import classnames from 'classnames';
-import { signIn, useSession, signOut } from 'next-auth/react';
-import { Avatar, Box, Button, Container, DropdownMenu, Flex, Text } from '@radix-ui/themes';
-import  ThemeSwitcher  from './theme/ThemeSwitcher';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { FaBug } from 'react-icons/fa';
+import ThemeSwitcher from './theme/ThemeSwitcher';
 
 const NavBar = () => {
   const currentPath = usePathname(); // gives the path name
@@ -22,6 +21,9 @@ const NavBar = () => {
       href: '/issues/list'
     }
   ];
+  if (currentPath === '/') {
+    return null;
+  }
 
   // Log session data to check the profile picture URL
   console.log('Session Data:', session);
