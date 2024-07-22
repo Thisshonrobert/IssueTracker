@@ -78,7 +78,7 @@ const NavBar = () => {
                       </Box>
                     }
                     radius="full"
-                    size="2"
+                    size="3"
                     className="cursor-pointer"
                   />
                 </DropdownMenu.Trigger>
