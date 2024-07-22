@@ -14,8 +14,8 @@ import { ThemeProvider } from './theme/ThemeProvider';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'IssueTracker Dashboard',
-  description: 'IssueTracker Home page',
+  title: 'IssueTracker',
+  description: 'Help in managing Issues',
 };
 
 export default function RootLayout({
