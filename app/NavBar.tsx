@@ -32,7 +32,7 @@ const NavBar = () => {
     <nav className="border-b mb-5 px-5 py-3">
       <Container>
         <Flex justify="between">
-          <Flex align="center" gap="3">
+          <Flex align="center" gap="2">
             <Link href="/">
               <FaBug />
             </Link>
@@ -54,7 +54,7 @@ const NavBar = () => {
             </ul>
           </Flex>
 
-          <Flex gap='5'>
+          <Flex gap='3'>
           <ThemeSwitcher/>
             {status === 'loading' ? (
               // Show a loading indicator while session data is being fetched
@@ -78,7 +78,7 @@ const NavBar = () => {
                       </Box>
                     }
                     radius="full"
-                    size="4"
+                    size="3"
                     className="cursor-pointer"
                   />
                 </DropdownMenu.Trigger>
