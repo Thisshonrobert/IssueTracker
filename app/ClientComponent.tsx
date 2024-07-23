@@ -45,10 +45,10 @@ const ClientComponent = () => {
         </div>
 
      
-          <div className="flex flex-col items-center mb-8 md:mb-0">
+          <div className="flex flex-col items-center mb-6 md:mb-0">
             <div className="flex items-center">
               <FaBug size={40} color={isDarkTheme ? "white" : "black"} className="mr-2" />
-              <h2 className="text-4xl font-bold text-center text-glow">
+              <h2 className="text-4xl font-bold text-center font-playwrite text-glow">
                 Issue Tracker
               </h2>
             </div>

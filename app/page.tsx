@@ -1,6 +1,6 @@
 import React from 'react';
-import ClientComponent from './issues/ClientComponent';
 import { Metadata } from 'next';
+import ClientComponent from './ClientComponent';
 
 const Homepage = () => {
   return (

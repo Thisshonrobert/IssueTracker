@@ -32,7 +32,7 @@ const NavBar = () => {
     <nav className="border-b mb-5 px-5 py-3">
       <Container>
         <Flex justify="between">
-          <Flex align="center" gap="2">
+          <Flex align="center" gap="3">
             <Link href="/">
               <FaBug />
             </Link>
@@ -78,7 +78,7 @@ const NavBar = () => {
                       </Box>
                     }
                     radius="full"
-                    size="3"
+                    size="2"
                     className="cursor-pointer"
                   />
                 </DropdownMenu.Trigger>
