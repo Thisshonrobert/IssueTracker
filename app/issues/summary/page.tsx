@@ -2,7 +2,7 @@ import IssueChart from "@/app/IssueChart";
 import IssueSummary from "@/app/IssueSummary";
 import LatestIssues from "@/app/LatestIssue";
 import prisma from "@/prisma/client";
-import { Grid, Flex } from "@radix-ui/themes";
+import { Grid, Flex, Container } from "@radix-ui/themes";
 import { Metadata } from "next/types";
 
 export default async function summary() {
@@ -17,6 +17,7 @@ export default async function summary() {
   });
 
   return(
+    <Container>
     <Grid gap='8' columns={{initial:'1', md:'2'}}>
       <Flex direction='column' gap='8'>
       <IssueSummary open={open} inProgress={inProgress} closed={closed}/>
@@ -24,6 +25,7 @@ export default async function summary() {
       </Flex>
       <LatestIssues/>
     </Grid>
+    </Container>
   )
   
 }

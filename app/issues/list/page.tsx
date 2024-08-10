@@ -1,13 +1,13 @@
 import prisma from "@/prisma/client";
-import { Flex, Table } from "@radix-ui/themes";
+import { Container, Flex, Table } from "@radix-ui/themes";
 import React from "react";
-import StatusBadge from "../../components/StatusBadge";
+import StatusBadge from "../../component/StatusBadge";
 import IssueAction from "./IssueAction";
-import Link from "../../components/Link";
+import Link from "../../component/Link";
 import { Issue, Status } from "@prisma/client";
 import NextLink from "next/link";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
-import Pagination from "@/app/components/Pagination";
+import Pagination from "@/app/component/Pagination";
 import IssueTable, { IssueQuery, columnNames } from "./IssueTable";
 import { Metadata } from "next/types";
 
@@ -51,7 +51,7 @@ const Issuepage = async ({ searchParams }: Props) => {
     issueCount = await prisma.issue.count({});
   }
 
-  return (
+  return (<Container>
     <Flex direction="column" gap="3">
       <IssueAction />
       <IssueTable searchParams={searchParams} issues={issues} />
@@ -62,6 +62,7 @@ const Issuepage = async ({ searchParams }: Props) => {
         currentPage={page}
       />
     </Flex>
+  </Container>
   );
 };
 export const dynamic = "force-dynamic";

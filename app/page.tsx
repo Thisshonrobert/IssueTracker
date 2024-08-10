@@ -4,7 +4,7 @@ import ClientComponent from './ClientComponent';
 
 const Homepage = () => {
   return (
-    <div>
+    <div className="data-full-width bg-black">
       <ClientComponent />
     </div>
   );

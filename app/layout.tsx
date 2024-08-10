@@ -10,6 +10,7 @@ import NavBar from './NavBar';
 import AuthProvider from './auth/AuthProvider';
 import ClientQuery from './ClientQuery';
 import { ThemeProvider } from './theme/ThemeProvider';
+import React from 'react';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  
   return (
     <html lang="en">
       <body className={inter.variable}>
@@ -31,8 +33,8 @@ export default function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="dark">
               <Theme accentColor="blue" grayColor="gray" >
                 <NavBar />
-                <main className="p-5">
-                  <Container>{children}</Container>
+                <main >
+                 {children}
                 </main>
               </Theme>
             </ThemeProvider>
